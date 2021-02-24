@@ -25,8 +25,8 @@
 
 on:
   push:
-  branches:
-    - master
+    branches:
+      - master
   # release:
   #   types: [created]
 
