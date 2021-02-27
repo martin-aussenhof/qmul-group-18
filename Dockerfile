@@ -1,10 +1,8 @@
-FROM python:3
-# Set application working directory
-WORKDIR /usr/src/app
-# Install requirements
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-# Install application
-COPY app/main.py ./
-# Run application
-CMD python main.py
+FROM python:3.5-slim
+USER root
+WORKDIR /app
+ADD . /app
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+EXPOSE 80
+ENV NAME World
+CMD ["python", "app.py"]
