@@ -56,7 +56,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ecs-cc-group-18-repository
+          ECR_REPOSITORY: group-18-rest-api-repository
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
