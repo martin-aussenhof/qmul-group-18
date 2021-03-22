@@ -1,0 +1,16 @@
+Database Tables:
+    Users (id, first_name, last_name, role.id)
+    Role (id, name, access_rights)
+    topics (id, title, category.id, available (bool))
+    topics_choices (users.id, selected_topics (array of topics.id, max 5), approved_topic (topics.id, int, max 1))
+
+Routes:
+    GET /get_users/ -> Return list of all users with choices.
+    GET /get_user/<user.id>> -> Return one user and their choices, plus approved (if applicable).
+    POST /create_user/ -> Post with new user (first_name, last_name, role.id).
+    UPDATE /update_user/<user.id> -> Update request with first_name, last_name, role.id
+    DELETE /delete_user/<user.id>> -> Delete a user.
+    GET /get_topics/ -> Return list of all topics. Retrieve "hot" score from external API.
+    GET /get_topic/<id> -> Return one topic by id. Retrieve "hot" scores from external API.
+    POST /set_topic/ -> POST if entry for user doesn't exist in topics_choices. table topics_choices, insert either selected_topics (if student role) or approved_topic (if professor role). Only works for student if approved topic isn't final.
+    UPDATE /set_topic/ -> UPDATE table topics_choices, insert either selected_topics (if student role) or approved_topic (if professor role). Only works for student if approved topic isn't final.
