@@ -2,7 +2,12 @@ from flask import Flask, render_template, request, jsonify
 import requests
 import requests_cache
 
-from routes.database_connector import connect_to_database, execute_insert_query, execute_select_query, close_database_connection
+from routes.database_connector import (
+    connect_to_database,
+    execute_insert_query,
+    execute_select_query,
+    close_database_connection,
+)
 
 
 def staffs():
@@ -32,7 +37,10 @@ def staffs():
             connection = connect_to_database()
             execute_insert_query(connection, query)
             close_database_connection(connection)
-            return f"Success: {str(qmul_staff_id)} - {staff_full_name} has successfully been created.", 201
+            return (
+                f"Success: {str(qmul_staff_id)} - {staff_full_name} has successfully been created.",
+                201,
+            )
         except BaseException:
             return "Staff entry couldn't be created.", 403
 
@@ -92,14 +100,12 @@ def approve(qmul_student_id):
         return "Resource doesn't exist.", 401
 
 
-def choice(qmul_student_id):
-    try:
-        topicid = request.json["topicid"]
-        query = f"UPDATE studentchoice SET topicid = {topicid} WHERE qmul_student_id = {qmul_student_id};"
-        connection = connect_to_database()
-        execute_insert_query(connection, query)
-        close_database_connection(connection)
-
-        return f"Topic for Student {qmul_student_id} has been updated.", 200
-    except BaseException:
-        return "Resource doesn't exist.", 401
+def staff_login(qmul_staff_id):
+    query = f"SELECT password_hash from staffids WHERE qmul_staff_id = {qmul_staff_id};"
+    connection = connect_to_database()
+    results = execute_select_query(connection, query)
+    close_database_connection(connection)
+    if results:
+        return results[0][0]
+    else:
+        return None

@@ -40,4 +40,3 @@ def execute_insert_query(connection, query):
 def close_database_connection(connection):
     if connection is not None:
         connection.close()
-

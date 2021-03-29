@@ -46,3 +46,8 @@ Note: You do not have to merge your code to save it. You can follow steps 1-7 to
 1. Run `export FLASK_ENV=development` to enable debug mode (if you want it). If using Windows, use `set FLASK_ENV=development` in CMD or `$env:FLASK_ENV = "development"` in Powershell
 1. Run `pip install requirements.txt` to install all required packages.
 1. Run `flask run` to start the server and navigate to the url presented in terminal.
+
+## Get Token
+
+1. Log in at: http://127.0.0.1:5000/authentication (e.g. username: 200123471, password: hello).
+2. Use as follows in curl `curl -X GET -H "Authorization: Bearer <token>" http://localhost:5000/studentids`
