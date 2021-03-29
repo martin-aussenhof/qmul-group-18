@@ -2,37 +2,29 @@ from flask import Flask, render_template, request, jsonify
 import json
 import requests
 import requests_cache
-import psycopg2
+from routes.database_connector import connect_to_database, execute_insert_query, execute_select_query, close_database_connection
+from routes.staff import staffs, staff, choice, approve
 
 # Set up Caching.
 # requests_cache.install_cache("cc_g18_cache", backend="sqlite", expire_after=36000)
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
-def run_query(query):
-    """ Connect to the PostgreSQL database server """
-    conn = None
-    try:
-        conn = psycopg2.connect(
-            host="group-18.cvdzsvzawper.us-east-1.rds.amazonaws.com",
-            database="postgres",
-            user="postgres",
-            password="Group-18",
-        )
-        cur = conn.cursor()
-        cur.execute(query)
-        results = cur.fetchall()
-        cur.close()
-        return results
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-
-    finally:
-        if conn is not None:
-            conn.close()
-            print("Database connection closed.")
+app.add_url_rule('/staff', view_func=staffs, methods=["GET", "POST"])
+app.add_url_rule(
+    '/staff/<qmul_staff_id>',
+    view_func=staff,
+    methods=[
+        "GET",
+        "DELETE",
+        "PUT"])
+app.add_url_rule(
+    '/approve/<qmul_staff_id>',
+    view_func=approve,
+    methods=["PUT"])
+app.add_url_rule('/choice/<qmul_staff_id>', view_func=choice, methods=["PUT"])
 
 
 @app.route("/")
@@ -40,17 +32,13 @@ def home():
     return "Welcome to Group 18's REST API."
 
 
-# Internal database routes.
-@app.route("/datbase_ids", methods=["GET"])
-def get_database_ids():
-    try:
-        results = run_query("SELECT* from database_id;")
-        return jsonify(results), 200
-    except:
-        return "Resource doesn't exist.", 401
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return "The requested route doesn't exist.", 404
 
 # External API routes.
+
+
 @app.route("/science", methods=["GET"])
 def science():
     try:
@@ -60,13 +48,8 @@ def science():
             return resp.json(), 200
         else:
             return resp.reason, 401
-    except:
+    except BaseException:
         return "Resource doesn't exist.", 401
-
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return "The requested route doesn't exist.", 404
 
 
 if __name__ == "__main__":
