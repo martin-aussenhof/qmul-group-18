@@ -7,12 +7,13 @@ from routes.database_connector import (
     execute_select_query,
     close_database_connection,
 )
+from werkzeug.security import generate_password_hash
 
 
 def students():
     if request.method == "GET":
         try:
-            query = "SELECT* from studentids;"
+            query = "SELECT qmul_student_id, student_full_name from studentids;"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
@@ -22,9 +23,12 @@ def students():
     if request.method == "POST":
         try:
             data = request.get_json(force=True)
+            print(data)
             qmul_student_id = data["qmul_student_id"]
             student_full_name = data["student_full_name"]
-            query1 = f"INSERT INTO studentids (qmul_student_id, student_full_name) VALUES({qmul_student_id}, '{student_full_name}');"
+            password_hash = generate_password_hash(data["password"])
+            print(data)
+            query1 = f"INSERT INTO studentids (qmul_student_id, student_full_name, password_hash) VALUES({qmul_student_id}, '{student_full_name}', '{password_hash}');"
             query2 = f"INSERT INTO studentchoice (qmul_student_id, topicid, approvedid) VALUES({qmul_student_id}, 0, 1);"
             connection = connect_to_database()
             execute_insert_query(connection, query1)
@@ -38,9 +42,7 @@ def students():
 def student(qmul_student_id):
     if request.method == "GET":
         try:
-            query = (
-                f"SELECT* from studentids WHERE qmul_student_id = {qmul_student_id};"
-            )
+            query = f"SELECT qmul_student_id, student_full_name from studentids WHERE qmul_student_id = {qmul_student_id};"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
@@ -120,11 +122,13 @@ def studentchoice(qmul_student_id):
 
 
 def student_login(qmul_student_id):
+    if qmul_staff_id is None:
+        qmul_staff_id = 0
     query = f"SELECT password_hash from studentids WHERE qmul_student_id = {qmul_student_id};"
     connection = connect_to_database()
     results = execute_select_query(connection, query)
     close_database_connection(connection)
     if results:
-        return results[0][0]
+        return results[0]["password_hash"]
     else:
         return None

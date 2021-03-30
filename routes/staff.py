@@ -13,7 +13,7 @@ from routes.database_connector import (
 def staffs():
     if request.method == "GET":
         try:
-            query = "SELECT* from staffids;"
+            query = "SELECT qmul_staff_id, staff_full_name from staffids;"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
@@ -48,7 +48,7 @@ def staffs():
 def staff(qmul_staff_id):
     if request.method == "GET":
         try:
-            query = f"SELECT* from staffids WHERE qmul_staff_id = {qmul_staff_id};"
+            query = f"SELECT qmul_staff_id, staff_full_name from staffids WHERE qmul_staff_id = {qmul_staff_id};"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
@@ -101,11 +101,13 @@ def approve(qmul_student_id):
 
 
 def staff_login(qmul_staff_id):
+    if qmul_staff_id is None:
+        qmul_staff_id = 0
     query = f"SELECT password_hash from staffids WHERE qmul_staff_id = {qmul_staff_id};"
     connection = connect_to_database()
     results = execute_select_query(connection, query)
     close_database_connection(connection)
     if results:
-        return results[0][0]
+        return results[0]["password_hash"]
     else:
         return None

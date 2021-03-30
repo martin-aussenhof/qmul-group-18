@@ -21,8 +21,12 @@ def execute_select_query(connection, query):
         cursor = connection.cursor()
         cursor.execute(query)
         results = cursor.fetchall()
+        headers = [desc[0] for desc in cursor.description]
+        dict_results = list()
+        for result in results:
+            dict_results.append(dict(zip(headers, result)))
         cursor.close()
-        return results
+        return dict_results
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 

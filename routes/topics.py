@@ -16,6 +16,7 @@ def topics():
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
+            results = hot_or_not(results)
             return jsonify(results), 200
         except:
             return "Resource doesn't exist.", 401
@@ -42,9 +43,10 @@ def topic(topicid):
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
+            results = hot_or_not(results)
             return jsonify(results), 200
         except:
-            return "Topic doesn't exist.", 401
+            return "Topic doesn't exist or an error occured.", 401
     if request.method == "DELETE":
         try:
             query = f"DELETE FROM topics WHERE topicid = {topicid};"
@@ -67,3 +69,20 @@ def topic(topicid):
             return "Topic {topic_name} has been updated.", 200
         except:
             return "Topic couldn't be updated .", 403
+
+
+def hot_or_not(results):
+    for index, result in enumerate(results):
+        topic_name = result["topic_name"]
+        test_url = f"https://core.ac.uk:443/api-v2/search/{topic_name}?page=1&pageSize=10&apiKey=EJAX4BU5wNxsD8HPG23ynkt1M6Oirm9T"
+        resp = requests.get(test_url)
+        if resp.ok:
+            result_list = list(results[index])
+            if resp.json()["totalHits"] > 50000000:
+                hot_factor = "hot"
+            else:
+                hot_factor = "cold"
+            results[index]["hot_factor"] = hot_factor
+        else:
+            results[index]["hot_factor"] = "unknown"
+    return results

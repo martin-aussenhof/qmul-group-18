@@ -24,7 +24,7 @@ from routes.students import (
     student_login,
 )
 from routes.staff import staffs, staff, approve, staff_login
-from routes.topics import topics, topic
+from routes.topics import topics, topic, hot_or_not
 
 
 # Set up Caching.
@@ -40,12 +40,12 @@ multi_auth = MultiAuth(basic_auth, token_auth)
 
 # Add Routes
 app.add_url_rule(
-    "/studentids",
+    "/student",
     view_func=multi_auth.login_required(role="staff")(students),
     methods=["GET", "POST"],
 )
 app.add_url_rule(
-    "/studentids/<qmul_student_id>",
+    "/student/<qmul_student_id>",
     view_func=multi_auth.login_required(role=["staff", "student"])(student),
     methods=["GET", "DELETE", "PUT"],
 )
@@ -87,6 +87,11 @@ app.add_url_rule(
     view_func=multi_auth.login_required(role=["staff", "student"])(topic),
     methods=["GET", "DELETE", "PUT"],
 )
+app.add_url_rule(
+    "/hot_or_not/<topicname>",
+    view_func=multi_auth.login_required(role=["staff", "student"])(hot_or_not),
+    methods=["GET"],
+)
 
 
 @app.route("/")
@@ -99,24 +104,9 @@ def page_not_found(e):
     return "The requested route doesn't exist.", 404
 
 
-# External API routes.
-@app.route("/science", methods=["GET"])
-def science():
-    try:
-        test_url = "https://core.ac.udd:443/api-v2/search/computing?page=1&pageSize=10&apiKey=EJAX4BU5wNxsD8HPG23ynkt1M6Oirm9T"
-        resp = requests.get(test_url)
-        if resp.ok:
-            return resp.json(), 200
-        else:
-            return resp.reason, 401
-    except BaseException:
-        return "Resource doesn't exist.", 401
-
-
 # Authentication
 @basic_auth.verify_password
 def verify_password(username, password):
-    print(username)
     try:
         password_hash = student_login(username)
     except:
