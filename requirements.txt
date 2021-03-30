@@ -1,7 +1,4 @@
-psycopg2==2.8.6
 requests==2.25.1
 requests-cache==0.5.2
-flask-swagger==0.2.14
-flask_httpauth==4.2.0
-passlib==1.7.4
-itsdangerous==1.1.0
+psycopg2==2.8.6
+flask_jwt_extended==4.1.0
