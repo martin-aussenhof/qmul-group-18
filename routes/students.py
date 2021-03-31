@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
+from werkzeug.security import generate_password_hash
+from flask_jwt_extended import get_jwt
 
 from routes.database_connector import (
     connect_to_database,
@@ -7,35 +9,37 @@ from routes.database_connector import (
     execute_select_query,
     close_database_connection,
 )
-from werkzeug.security import generate_password_hash
 
 
 def students():
     if request.method == "GET":
         try:
-            query = "SELECT qmul_student_id, student_full_name from studentids;"
+            query = "SELECT id, name, qmul_id from users where role_id = 1;"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
-        except:
+        except BaseException:
             return "Resource doesn't exist.", 401
+
     if request.method == "POST":
+        if not request.json or "name" not in request.json or "password" not in request.json or "qmul_id" not in request.json:
+            return "Missing parameters. Please provide name, password and qmul_id", 403
+
         try:
             data = request.get_json(force=True)
-            print(data)
-            qmul_student_id = data["qmul_student_id"]
-            student_full_name = data["student_full_name"]
+            name = data["name"]
             password_hash = generate_password_hash(data["password"])
-            print(data)
-            query1 = f"INSERT INTO studentids (qmul_student_id, student_full_name, password_hash) VALUES({qmul_student_id}, '{student_full_name}', '{password_hash}');"
-            query2 = f"INSERT INTO studentchoice (qmul_student_id, topicid, approvedid) VALUES({qmul_student_id}, 0, 1);"
+            qmul_id = data["qmul_id"]
+            query = f"INSERT INTO users (name, role_id, password_hash, qmul_id) VALUES('{name}', 1, '{password_hash}', {qmul_id});"
             connection = connect_to_database()
-            execute_insert_query(connection, query1)
-            execute_insert_query(connection, query2)
+            execute_insert_query(connection, query)
             close_database_connection(connection)
-            return "New student added", 201
-        except:
+            return (
+                f"Success: {name} - has successfully been created.",
+                201,
+            )
+        except BaseException:
             return "New student couldn't be added", 403
 
 
@@ -47,7 +51,7 @@ def student(qmul_student_id):
             results = execute_select_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
-        except:
+        except BaseException:
             return "Student doesn't exist.", 401
     if request.method == "DELETE":
         try:
@@ -63,7 +67,7 @@ def student(qmul_student_id):
             execute_insert_query(connection, query2)
             close_database_connection(connection)
             return "Student " + qmul_student_id + " successfully deleted.", 201
-        except:
+        except BaseException:
             return "Student doesn't exist.", 401
     if request.method == "UPDATE":
         try:
@@ -76,7 +80,7 @@ def student(qmul_student_id):
             execute_insert_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
-        except:
+        except BaseException:
             return "Student's name couldn't be updated.", 403
 
 
@@ -88,7 +92,7 @@ def studentchoices():
             results = execute_select_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
-        except:
+        except BaseException:
             return "Resource doesn't exist.", 401
 
 
@@ -102,7 +106,7 @@ def studentchoice(qmul_student_id):
             results = execute_select_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
-        except:
+        except BaseException:
             return "Student doesn't exist.", 401
     if request.method == "UPDATE":
         try:
@@ -117,7 +121,7 @@ def studentchoice(qmul_student_id):
                 f"Topic choice for Student {qmul_student_id} has been updated successfully.",
                 200,
             )
-        except:
+        except BaseException:
             return "Chosen topic couldn't be updated .", 403
 
 

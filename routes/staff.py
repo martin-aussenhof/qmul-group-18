@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import requests_cache
+from werkzeug.security import generate_password_hash
 
 from routes.database_connector import (
     connect_to_database,
@@ -13,32 +14,29 @@ from routes.database_connector import (
 def staffs():
     if request.method == "GET":
         try:
-            query = "SELECT qmul_staff_id, staff_full_name from staffids;"
+            query = "SELECT id, name, qmul_id from users where role_id = 2;"
             connection = connect_to_database()
             results = execute_select_query(connection, query)
             close_database_connection(connection)
             return jsonify(results), 200
         except BaseException:
             return "Resource doesn't exist.", 401
+
     if request.method == "POST":
-        if (
-            not request.json
-            or "staff_full_name" not in request.json
-            or "qmul_staff_id" not in request.json
-        ):
-            return (
-                "Missing parameters. Please provide staff_full_name and qmul_staff_id",
-                403,
-            )
+        if not request.json or "name" not in request.json or "password" not in request.json or "qmul_id" not in request.json:
+            return "Missing parameters. Please provide name, password and qmul_id", 403
+
         try:
-            qmul_staff_id = request.json["qmul_staff_id"]
-            staff_full_name = request.json["staff_full_name"]
-            query = f"INSERT INTO staffids (qmul_staff_id, staff_full_name) VALUES({str(qmul_staff_id)}, '{staff_full_name}');"
+            data = request.get_json(force=True)
+            name = data["name"]
+            password_hash = generate_password_hash(data["password"])
+            qmul_id = data["qmul_id"]
+            query = f"INSERT INTO users (name, role_id, password_hash, qmul_id) VALUES('{name}', 2, '{password_hash}', {qmul_id});"
             connection = connect_to_database()
             execute_insert_query(connection, query)
             close_database_connection(connection)
             return (
-                f"Success: {str(qmul_staff_id)} - {staff_full_name} has successfully been created.",
+                f"Success: {name} - has successfully been created.",
                 201,
             )
         except BaseException:

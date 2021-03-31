@@ -18,7 +18,7 @@ def get_topics():
         close_database_connection(connection)
         results = hot_or_not(results)
         return jsonify(results), 200
-    except:
+    except BaseException:
         return "Resource doesn't exist.", 401
 
 
@@ -34,11 +34,15 @@ def post_topics():
         execute_insert_query(connection, query)
         close_database_connection(connection)
         return "New topic created", 201
-    except:
+    except BaseException:
         return "New topic couldn't be created", 403
 
 
 def get_topic(id):
+
+    if get_jwt()["role"] == "student" and qmul_student_id != get_jwt()[
+            "qmul_student_id"]:
+        return jsonify(msg="You can only view your own entry!"), 403
     try:
         query = f"select id, topics.name, staff.name supervisor, research_area from topics left join staff on topics.qmul_staff_id = staff.qmul_staff_id where id not in (0,9);"
         connection = connect_to_database()
@@ -46,7 +50,7 @@ def get_topic(id):
         close_database_connection(connection)
         results = hot_or_not(results)
         return jsonify(results), 200
-    except:
+    except BaseException:
         return "Topic doesn't exist or an error occured.", 401
 
 
@@ -58,7 +62,7 @@ def topic(id):
             execute_insert_query(connection, query)
             close_database_connection(connection)
             return "Topic " + id + " successfully deleted.", 201
-        except:
+        except BaseException:
             return "Topic doesn't exist.", 401
     if request.method == "PUT":
         try:
@@ -71,7 +75,7 @@ def topic(id):
             execute_insert_query(connection, query)
             close_database_connection(connection)
             return "Topic {topic_name} has been updated.", 200
-        except:
+        except BaseException:
             return "Topic couldn't be updated .", 403
 
 
