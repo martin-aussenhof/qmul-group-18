@@ -12,7 +12,7 @@ def connect_to_database():
             password="Group-18",
         )
         return connection
-    except:
+    except BaseException:
         return "Couldn't connect to Database."
 
 

@@ -1,6 +1,6 @@
 {
   "thesispicker": {
-    "image": ":thesispicker-service.thesispicker-service.1",
+    "image": ":thesispicker-service.thesispicker-container.2",
     "ports": {
       "5000": "HTTP"
     }

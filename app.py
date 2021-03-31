@@ -19,7 +19,10 @@ from routes.choices import choices, choice, approve
 from routes.login import get_login
 
 # Set up Caching.
-requests_cache.install_cache("cc_g18_cache", backend="sqlite", expire_after=36000)
+requests_cache.install_cache(
+    "cc_g18_cache",
+    backend="sqlite",
+    expire_after=36000)
 
 # Set up App.
 app = Flask(__name__)
@@ -38,7 +41,8 @@ def staff_required():
             if claims["role"] == "staff":
                 return fn(*args, **kwargs)
             else:
-                return jsonify(msg="This route is for staff members only!"), 403
+                return jsonify(
+                    msg="This route is for staff members only!"), 403
 
         return decorator
 
@@ -120,17 +124,13 @@ def login_post():
             access_token = create_access_token(
                 identity=username, additional_claims={"role": role}
             )
-            return render_template("access_token.html", access_token=access_token)
+            return render_template("access_token.html",
+                                   access_token=access_token)
     flash("Please check your login details and try again.")
     return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
-    debug_env = True
-    if debug_env:
-        host = "127.0.0.1"
-        port = 5000
-    else:
-        host = "0.0.0.0"
-        port = 80
-    app.run(threaded=True, host=host, port=port, debug=debug_env)
+    app.run(host='0.0.0.0', port=5000)
+    # debug_env = True
+    # app.run(threaded=True, host=host, port=port, debug=debug_env)

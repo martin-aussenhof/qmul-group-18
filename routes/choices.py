@@ -33,7 +33,8 @@ def choices():
 
         try:
             data = request.get_json(force=True)
-            if get_jwt()["sub"] != data["qmul_id"] and get_jwt()["role"] != "staff":
+            if get_jwt()["sub"] != data["qmul_id"] and get_jwt()[
+                    "role"] != "staff":
                 return (
                     "Only the student themselves or a staff member can choose a topic.",
                     403,

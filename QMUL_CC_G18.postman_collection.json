@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4f7707f2-6b68-49a3-8017-3b680fe906eb",
+		"_postman_id": "d37c7654-92b3-4da3-b2f6-a24a15979b98",
 		"name": "QMUL_CC_G18",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -30,15 +30,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/users",
-							"protocol": "http",
+							"raw": "{{url}}/users",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"users"
 							]
@@ -72,15 +67,10 @@
 							"raw": "{\n    \"qmul_id\": 21234568,\n    \"name\": \"Ray Charles\",\n    \"role\": \"staff\",\n    \"password\": \"hello\"\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/users",
-							"protocol": "http",
+							"raw": "{{url}}/users",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"users"
 							]
@@ -110,15 +100,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/user/200123487",
-							"protocol": "http",
+							"raw": "{{url}}/user/200123487",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"user",
 								"200123487"
@@ -153,15 +138,10 @@
 							"raw": "{\n    \"new_qmul_id\": 212345681,\n    \"name\": \"Ray Charles\",\n    \"role\": \"staff\",\n    \"password\": \"hello\"\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/user/21234568",
-							"protocol": "http",
+							"raw": "{{url}}/user/21234568",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"user",
 								"21234568"
@@ -192,15 +172,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/user/2001234871",
-							"protocol": "http",
+							"raw": "{{url}}/user/2001234871",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"user",
 								"2001234871"
@@ -231,15 +206,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/topics",
-							"protocol": "http",
+							"raw": "{{url}}/topics",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"topics"
 							]
@@ -268,15 +238,10 @@
 							"raw": "{\n    \"topic\": \"Aliens in Poplar\",\n    \"research_area\": \"Physics\",\n    \"supervisor\": 200123401\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/topics",
-							"protocol": "http",
+							"raw": "{{url}}/topics",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"topics"
 							]
@@ -301,15 +266,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/topic/7",
-							"protocol": "http",
+							"raw": "{{url}}/topic/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"topic",
 								"7"
@@ -339,15 +299,10 @@
 							"raw": "{\n    \"topic\": \"Aliens in Poplar\",\n    \"research_area\": \"Maths\",\n    \"supervisor\": 200123401\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/topic/7",
-							"protocol": "http",
+							"raw": "{{url}}/topic/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"topic",
 								"7"
@@ -373,15 +328,10 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/topic/7",
-							"protocol": "http",
+							"raw": "{{url}}/topic/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"topic",
 								"7"
@@ -401,15 +351,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/choices",
-							"protocol": "http",
+							"raw": "{{url}}/choices",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"choices"
 							]
@@ -432,15 +377,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/choices",
-							"protocol": "http",
+							"raw": "{{url}}/choices",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"choices"
 							]
@@ -454,15 +394,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/choice/200123489",
-							"protocol": "http",
+							"raw": "{{url}}/choice/200123489",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"choice",
 								"200123489"
@@ -486,15 +421,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/choice/200123489",
-							"protocol": "http",
+							"raw": "{{url}}/choice/200123489",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"choice",
 								"200123489"
@@ -509,15 +439,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/choice/200123489",
-							"protocol": "http",
+							"raw": "{{url}}/choice/200123489",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"choice",
 								"200123489"
@@ -547,15 +472,10 @@
 							"raw": "{\r\n    \"approvedid\": 0\r\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/approve/200123465",
-							"protocol": "http",
+							"raw": "{{url}}/approve/200123465",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"approve",
 								"200123465"
@@ -572,7 +492,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYxNzIwNDYxMiwianRpIjoiNjhhMzQxODItZDE0OS00OTlmLTkyNmMtZjZhMjYxNTM2NWRjIiwibmJmIjoxNjE3MjA0NjEyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiMjAwMTIzNDcxIiwiZXhwIjoxNjE3MjA1NTEyLCJyb2xlIjoic3RhZmYifQ.6TOO7hCmc9efb2vUN_pl2NK0eZp6vZ1rlEKQDtbVNkk",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYxNzIyMjcwMSwianRpIjoiMDJkMDI4NDYtMTE4Zi00NzU5LWE1ZjAtMDkwMjk1ZTMxMzk2IiwibmJmIjoxNjE3MjIyNzAxLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiMjAwMTIzNDcxIiwiZXhwIjoxNjE3MjIzNjAxLCJyb2xlIjoic3RhZmYifQ.TaysbuagFus6IjH0-E-35RxRUY6VqdGl_b7tCLV4fek",
 				"type": "string"
 			}
 		]
@@ -595,6 +515,12 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/"
 		}
 	]
 }
