@@ -16,6 +16,11 @@ def connect_to_database():
         return "Couldn't connect to Database."
 
 
+def close_database_connection(connection):
+    if connection is not None:
+        connection.close()
+
+
 def execute_select_query(connection, query):
     try:
         cursor = connection.cursor()
@@ -28,19 +33,18 @@ def execute_select_query(connection, query):
         cursor.close()
         return dict_results
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        return error
 
 
-def execute_insert_query(connection, query):
+def execute_insert_query(query):
     try:
+        connection = connect_to_database()
         cursor = connection.cursor()
         cursor.execute(query)
         connection.commit()
+        status = cursor.statusmessage
         cursor.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-
-
-def close_database_connection(connection):
-    if connection is not None:
-        connection.close()
+        close_database_connection(connection)
+        return {"error": False, "status": status}
+    except psycopg2.DatabaseError as error:
+        return {"error": True, "status": error}

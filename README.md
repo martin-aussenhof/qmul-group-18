@@ -52,10 +52,17 @@ Note: You do not have to merge your code to save it. You can follow steps 1-7 to
 1. Log in at: http://127.0.0.1:5000/authentication (e.g. username: 200123471, password: hello).
 1. Use as follows in curl `curl -X GET -H "Authorization: Bearer <token>" http://localhost:5000/studentids`
 
-## Deploy to AWS Lightsail
+## Deploy to AWS Lightsail (First Time)
 
 1. Build docker image with `docker build . -t thesispicker`.
 1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
 1. If previous step had no errors, create container service with `aws lightsail create-container-service --service-name thesispicker-service \ --power small --scale 1`.
+1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
+1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
+
+## Deploy to AWS Lightsail (Additional Times)
+
+1. Build docker image with `docker build . -t thesispicker`.
+1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
 1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
 1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`

@@ -1,8 +1,23 @@
-FROM python:3.5-slim
-USER root
+# Set base image (host OS)
+FROM python:3.9-slim-buster
+
+# By default, listen on port 5000
+EXPOSE 5000/tcp
+
+# Set the working directory in the container
 WORKDIR /app
-ADD . /app
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
-EXPOSE 80
-ENV NAME World
-CMD ["python", "app.py"]
+
+# Copy the dependencies file to the working directory
+COPY requirements.txt .
+
+# Install any dependencies
+RUN pip install psycopg2-binary
+RUN pip install -r requirements.txt
+
+# Copy the content of the local src directory to the working directory
+COPY app.py .
+COPY /templates ./templates/
+COPY /routes ./routes/
+
+# Specify the command to run on container start
+CMD [ "python", "./app.py" ]

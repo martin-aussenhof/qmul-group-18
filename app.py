@@ -13,22 +13,13 @@ from flask_jwt_extended import (
     JWTManager,
 )
 
-from routes.students import (
-    students,
-    student,
-    studentchoices,
-    studentchoice,
-    student_login,
-)
-from routes.staff import staffs, staff, approve, staff_login
-from routes.topics import get_topics, post_topics, get_topic, topic, hot_or_not
+from routes.users import users, user
+from routes.topics import topics, topic
+from routes.choices import choices, choice, approve
 from routes.login import get_login
 
 # Set up Caching.
-requests_cache.install_cache(
-    "cc_g18_cache",
-    backend="sqlite",
-    expire_after=36000)
+requests_cache.install_cache("cc_g18_cache", backend="sqlite", expire_after=36000)
 
 # Set up App.
 app = Flask(__name__)
@@ -47,8 +38,7 @@ def staff_required():
             if claims["role"] == "staff":
                 return fn(*args, **kwargs)
             else:
-                return jsonify(
-                    msg="This route is for staff members only!"), 403
+                return jsonify(msg="This route is for staff members only!"), 403
 
         return decorator
 
@@ -57,72 +47,52 @@ def staff_required():
 
 # Add Routes
 app.add_url_rule(
-    "/students",
-    view_func=staff_required()(students),
+    "/users",
+    view_func=staff_required()(users),
     methods=["GET", "POST"],
 )
 
 app.add_url_rule(
-    "/student/<qmul_student_id>",
-    view_func=staff_required()(student),
+    "/user/<qmul_id>",
+    view_func=staff_required()(user),
     methods=["GET", "DELETE", "PUT"],
 )
 
 app.add_url_rule(
-    "/studentchoice",
-    view_func=staff_required()(studentchoices),
-    methods=["GET"],
-)
-app.add_url_rule(
-    "/studentchoice/<qmul_student_id>",
-    view_func=staff_required()(studentchoice),
-    methods=["GET", "PUT"],
-)
-
-app.add_url_rule(
-    "/staff",
-    view_func=staff_required()(staffs),
+    "/topics",
+    view_func=jwt_required()(topics),
     methods=["GET", "POST"],
-)
-app.add_url_rule(
-    "/staff/<qmul_staff_id>",
-    view_func=staff_required()(staff),
-    methods=["GET", "DELETE", "PUT"],
-)
-app.add_url_rule(
-    "/approve/<qmul_staff_id>",
-    view_func=staff_required()(approve),
-    methods=["PUT"],
-)
-
-app.add_url_rule(
-    "/topics",
-    view_func=jwt_required()(get_topics),
-    methods=["GET"],
-)
-
-app.add_url_rule(
-    "/topics",
-    view_func=staff_required()(post_topics),
-    methods=["POST"],
 )
 
 app.add_url_rule(
     "/topic/<id>",
-    view_func=jwt_required()(get_topic),
-    methods=["GET"],
+    view_func=staff_required()(topic),
+    methods=["GET", "DELETE", "PUT"],
 )
 
 app.add_url_rule(
-    "/topics/<topicid>",
-    view_func=staff_required()(topic),
-    methods=["DELETE", "PUT"],
+    "/choices",
+    view_func=jwt_required()(choices),
+    methods=["GET", "POST"],
+)
+
+app.add_url_rule(
+    "/choice/<qmul_id>",
+    view_func=jwt_required()(choice),
+    methods=["GET", "DELETE", "PUT"],
+)
+
+app.add_url_rule(
+    "/approve/<qmul_id>",
+    view_func=staff_required()(approve),
+    methods=["PUT"],
 )
 
 
+# Default Routes
 @app.route("/")
 def home():
-    return "Welcome to Group 18's REST API."
+    return render_template("index.html")
 
 
 @app.errorhandler(404)
@@ -130,6 +100,7 @@ def page_not_found(e):
     return "The requested route doesn't exist.", 404
 
 
+# Authentication
 @app.route("/login")
 def login():
     return render_template("login.html")
@@ -149,8 +120,7 @@ def login_post():
             access_token = create_access_token(
                 identity=username, additional_claims={"role": role}
             )
-            return render_template("access_token.html",
-                                   access_token=access_token)
+            return render_template("access_token.html", access_token=access_token)
     flash("Please check your login details and try again.")
     return redirect(url_for("login"))
 

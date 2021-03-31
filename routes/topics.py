@@ -10,83 +10,100 @@ from routes.database_connector import (
 )
 
 
-def get_topics():
-    try:
-        query = "SELECT* from topics;"
-        connection = connect_to_database()
-        results = execute_select_query(connection, query)
-        close_database_connection(connection)
-        results = hot_or_not(results)
-        return jsonify(results), 200
-    except BaseException:
-        return "Resource doesn't exist.", 401
+def topics():
+    if request.method == "GET":
+        try:
+            query = f"SELECT id, topics.name as name, users.name as supervisor, topics.research_area as research_area from topics left join users on topics.supervisor = users.qmul_id;"
+            connection = connect_to_database()
+            results = execute_select_query(connection, query)
+            close_database_connection(connection)
+            results = hot_or_not(results)
+            return jsonify(results), 200
+        except BaseException:
+            return "Couldn't retrieve list.", 401
 
+    if request.method == "POST":
+        required_fields = ["topic", "supervisor", "research_area"]
+        if not request.json or not all(
+            field in request.json for field in required_fields
+        ):
+            return (
+                "Missing parameters. Please provide topic, supervisor (qmul_id) and research_area",
+                403,
+            )
 
-def post_topics():
-    try:
-        data = request.get_json(force=True)
-        topicid = data["topicid"]
-        topic_name = data["topic_name"]
-        qmul_staff_id = data["qmul_staff_id"]
-        research_area = data["research_area"]
-        query = f"INSERT INTO topics (topicid, topic_name, qmul_staff_id, research_area) VALUES({topicid}, '{topic_name}', {qmul_staff_id}, '{research_area}')"
-        connection = connect_to_database()
-        execute_insert_query(connection, query)
-        close_database_connection(connection)
-        return "New topic created", 201
-    except BaseException:
-        return "New topic couldn't be created", 403
-
-
-def get_topic(id):
-
-    if get_jwt()["role"] == "student" and qmul_student_id != get_jwt()[
-            "qmul_student_id"]:
-        return jsonify(msg="You can only view your own entry!"), 403
-    try:
-        query = f"select id, topics.name, staff.name supervisor, research_area from topics left join staff on topics.qmul_staff_id = staff.qmul_staff_id where id not in (0,9);"
-        connection = connect_to_database()
-        results = execute_select_query(connection, query)
-        close_database_connection(connection)
-        results = hot_or_not(results)
-        return jsonify(results), 200
-    except BaseException:
-        return "Topic doesn't exist or an error occured.", 401
+        try:
+            data = request.get_json(force=True)
+            name = data["topic"]
+            supervisor = data["supervisor"]
+            research_area = data["research_area"]
+            query = f"INSERT INTO topics (name, supervisor, research_area) VALUES('{name}', '{supervisor}', '{research_area}');"
+            results = execute_insert_query(query)
+            if results["error"]:
+                return str(results["status"]), 403
+            return (
+                f"{name} - has successfully been created.",
+                201,
+            )
+        except BaseException:
+            return "New topic couldn't be added", 403
 
 
 def topic(id):
-    if request.method == "DELETE":
+    if request.method == "GET":
         try:
-            query = f"DELETE FROM topics WHERE topicid = {id};"
+            query = f"SELECT id, topics.name as name, users.name as supervisor, topics.research_area as research_area from topics left join users on topics.supervisor = users.qmul_id where id = {id};"
             connection = connect_to_database()
-            execute_insert_query(connection, query)
+            results = execute_select_query(connection, query)
             close_database_connection(connection)
-            return "Topic " + id + " successfully deleted.", 201
+            return jsonify(results), 200
         except BaseException:
-            return "Topic doesn't exist.", 401
+            return "User doesn't exist.", 401
+
     if request.method == "PUT":
+        required_fields = ["topic", "supervisor", "research_area"]
+        if not request.json or not all(
+            field in request.json for field in required_fields
+        ):
+            return (
+                "Missing parameters. Please provide topic, supervisor (qmul_id) and research_area",
+                403,
+            )
         try:
             data = request.get_json(force=True)
-            name = data["name"]
-            qmul_staff_id = data["qmul_staff_id"]
+            name = data["topic"]
+            supervisor = data["supervisor"]
             research_area = data["research_area"]
-            query = f"UPDATE topics SET name = '{name}', qmul_staff_id = {qmul_staff_id}, research_area = '{research_area}' WHERE id = {id};"
-            connection = connect_to_database()
-            execute_insert_query(connection, query)
-            close_database_connection(connection)
-            return "Topic {topic_name} has been updated.", 200
+            query = f"UPDATE topics SET name = '{name}', supervisor = {supervisor}, research_area = '{research_area}' where id = {id};"
+            results = execute_insert_query(query)
+            if results["error"]:
+                return str(results["status"]), 403
+            return (
+                f"{name} has successfully been updated.",
+                201,
+            )
         except BaseException:
-            return "Topic couldn't be updated .", 403
+            return "Topic couldn't be updated", 403
+
+    if request.method == "DELETE":
+        try:
+            query = f"DELETE FROM topics WHERE id = {id};"
+            results = execute_insert_query(query)
+            if results["error"]:
+                return str(results["status"]), 403
+            return f"Topic {id} has successfully been deleted.", 201
+        except BaseException:
+            return "Topic doesn't exist.", 401
 
 
 def hot_or_not(results):
     for index, result in enumerate(results):
-        topic_name = result["topic_name"]
+        topic_name = result["name"]
         test_url = f"https://core.ac.uk:443/api-v2/search/{topic_name}?page=1&pageSize=10&apiKey=EJAX4BU5wNxsD8HPG23ynkt1M6Oirm9T"
         resp = requests.get(test_url)
         if resp.ok:
             result_list = list(results[index])
-            if resp.json()["totalHits"] > 50000000:
+            if resp.json()["totalHits"] > 100000000:
                 hot_factor = "hot"
             else:
                 hot_factor = "cold"
