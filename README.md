@@ -27,12 +27,12 @@ _Note: Some routes and actions will require staff access. The demo account above
 
 **Purpose**: Retrieve full list of users (GET). Create new user (POST).
 
-##### Examples
+##### Examples for /users
 
 ###### Get list of all Users
 
 ```bash
-curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//users' \
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/users' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
@@ -40,7 +40,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 ###### Create new User
 
 ```bash
-curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//users' \
+curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/users' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <INSERT TOKEN HERE>' \
 --data-raw '{
@@ -65,12 +65,12 @@ curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-we
 
 **Purpose**: Retrieve single user (GET). Update existing user (PUT). Delete existing user (DELETE).
 
-##### Examples
+##### Example for /user/<qmul_id>
 
 ###### Get single user
 
 ```bash
-curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/200123487' \
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/200123487' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
@@ -78,7 +78,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 ###### Update existing user
 
 ```bash
-curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/21234568' \
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/21234568' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <INSERT TOKEN HERE>' \
 --data-raw '{
@@ -92,40 +92,200 @@ curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 ###### Delete existing user
 
 ```bash
-curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/2001234871' \
+curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/2001234871' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-app.add_url_rule(
-"/topics",
-view_func=jwt_required()(topics),
-methods=["GET", "POST"],
-)
+---
 
-app.add_url_rule(
-"/topic/<id>",
-view_func=staff_required()(topic),
-methods=["GET", "DELETE", "PUT"],
-)
+#### /topics
 
-app.add_url_rule(
-"/choices",
-view_func=jwt_required()(choices),
-methods=["GET", "POST"],
-)
+---
 
-app.add_url_rule(
-"/choice/<qmul_id>",
-view_func=jwt_required()(choice),
-methods=["GET", "DELETE", "PUT"],
-)
+**Allowed Methods:** ["GET", "POST"]
 
-app.add_url_rule(
-"/approve/<qmul_id>",
-view_func=staff_required()(approve),
-methods=["PUT"],
-)
+**Access Roles:** Staff, Student
+
+**Category:** Topic Management
+
+**Purpose**: Retrieve full list of topics (GET). Create new topic (POST).
+
+##### Examples for /topics
+
+###### Get list of all Topics
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topics' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Create new Topic
+
+```bash
+curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topics' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--data-raw '{
+    "topic": "Aliens in Poplar",
+    "research_area": "Physics",
+    "supervisor": 200123401
+}'
+```
+
+---
+
+#### /topic/\<id>
+
+---
+
+**Allowed Methods:** ["GET", "PUT", "DELETE"]
+
+**Access Roles:** Staff
+
+**Category:** Topic Management
+
+**Purpose**: Retrieve topic (GET). Update existing topic (PUT). Delete existing topic (DELETE).
+
+##### Example for /topic/\<id>
+
+###### Get single topic
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Update existing topic
+
+```bash
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--data-raw '{
+    "topic": "Aliens in Poplar",
+    "research_area": "Maths",
+    "supervisor": 200123401
+}'
+```
+
+###### Delete existing topic
+
+```bash
+curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+---
+
+#### /choices
+
+---
+
+**Allowed Methods:** ["GET", "POST"]
+
+**Access Roles:** Staff, Student (with restrictions to their own qmul id)
+
+**Category:** Choice Management
+
+**Purpose**: Retrieve full list of choices (GET). Create new choice (POST).
+
+##### Examples for /choices
+
+###### Get list of all Choices
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choices' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Create new Choice
+
+```bash
+curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choices' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "topic_id": "2",
+    "qmul_id": 200123489
+}'
+```
+
+---
+
+#### /choice/<qmul_id>
+
+---
+
+**Allowed Methods:** ["GET", "PUT", "DELETE"]
+
+**Access Roles:** Staff, Student (with restrictions to their own qmul id)
+
+**Category:** Choice Management
+
+**Purpose**: Retrieve choice (GET). Update existing choice (PUT). Delete existing choice (DELETE).
+
+##### Example for /choice/<qmul_id>
+
+###### Get single choice
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Update existing choice
+
+```bash
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "topic_id": 3,
+    "qmul_id": 200123489
+}'
+```
+
+###### Delete existing choice
+
+```bash
+curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+---
+
+#### /approve/<qmul_id>
+
+---
+
+**Allowed Methods:** ["PUT"]
+
+**Access Roles:** Staff
+
+**Category:** Choice Management
+
+**Purpose**: Approve existing choice (PUT).
+
+##### Examples for /approve/<qmul_id>
+
+###### Approve existing choice
+
+```bash
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/approve/200123465' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--data-raw '{
+    "approvedid": 0
+}'
+```
+
+---
 
 ## Installation
 
