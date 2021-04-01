@@ -2,6 +2,131 @@
 
 This repository contains the code for Group 18's Cloud Computing Project.
 
+## Usage
+
+### Authorisation
+
+1. Navigate to the cloud hosted login page [here](https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/login) and log in (e.g. username: 200123471, password: hello).
+1. Copy token and use curl or Postman to access routes. For example `curl -X GET -H "Authorization: Bearer <token>" http://localhost:5000/users`
+
+_Note: Some routes and actions will require staff access. The demo account above is a staff account._
+
+### Routes
+
+---
+
+#### /users
+
+---
+
+**Allowed Methods:** ["GET", "POST"]
+
+**Access Roles:** Staff
+
+**Category:** User Management
+
+**Purpose**: Retrieve full list of users (GET). Create new user (POST).
+
+##### Examples
+
+###### Get list of all Users
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//users' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Create new User
+
+```bash
+curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//users' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--data-raw '{
+    "qmul_id": 21234568,
+    "name": "Ray Charles",
+    "role": "staff",
+    "password": "hello"
+}'
+```
+
+---
+
+#### /user/<qmul_id>
+
+---
+
+**Allowed Methods:** ["GET", "PUT", "DELETE"]
+
+**Access Roles:** Staff
+
+**Category:** User Management
+
+**Purpose**: Retrieve single user (GET). Update existing user (PUT). Delete existing user (DELETE).
+
+##### Examples
+
+###### Get single user
+
+```bash
+curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/200123487' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+###### Update existing user
+
+```bash
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/21234568' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--data-raw '{
+    "new_qmul_id": 212345681,
+    "name": "Ray Charles",
+    "role": "staff",
+    "password": "hello"
+}'
+```
+
+###### Delete existing user
+
+```bash
+curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com//user/2001234871' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <INSERT TOKEN HERE>'
+```
+
+app.add_url_rule(
+"/topics",
+view_func=jwt_required()(topics),
+methods=["GET", "POST"],
+)
+
+app.add_url_rule(
+"/topic/<id>",
+view_func=staff_required()(topic),
+methods=["GET", "DELETE", "PUT"],
+)
+
+app.add_url_rule(
+"/choices",
+view_func=jwt_required()(choices),
+methods=["GET", "POST"],
+)
+
+app.add_url_rule(
+"/choice/<qmul_id>",
+view_func=jwt_required()(choice),
+methods=["GET", "DELETE", "PUT"],
+)
+
+app.add_url_rule(
+"/approve/<qmul_id>",
+view_func=staff_required()(approve),
+methods=["PUT"],
+)
+
 ## Installation
 
 This Guide is for absolute beginners. If you are more experienced, you might want to skip some of the steps.
@@ -13,7 +138,58 @@ This Guide is for absolute beginners. If you are more experienced, you might wan
 3. Clone repository using `git clone git@github.com:martin-aussenhof/qmul-group-18.git` in your local console or preferred development environment. It will create a new sub directory in your current sub directory, so be aware of your current path.
 4. Open the directory `qmul-group-18` in your favourite editor to view the code.
 
-## Contributing
+## Run Locally without Docker
+
+1. Open a terminal and navigate to the parent directory where you want to have the repository.
+1. Clone repository (see above).
+1. Change directory to the repository folder `cd qmul-group-18`.
+1. Run `git checkout master` to switch to the master branch.
+1. Run `git pull` to get latest master branch from remote.
+1. Run `export FLASK_APP=app` to set the environment variable for flask. If using Windows, use `set FLASK_APP=app` in CMD or `$env:FLASK_APP = "app"` in Powershell
+1. Run `export FLASK_ENV=development` to enable debug mode (if you want it). If using Windows, use `set FLASK_ENV=development` in CMD or `$env:FLASK_ENV = "development"` in Powershell
+1. Run `pip install requirements.txt` to install all required packages.
+1. Run `flask run` to start the server and navigate to the url presented in terminal.
+
+## Run Locally with Docker
+
+1. Open a terminal and navigate to the parent directory where you want to have the repository.
+1. Clone repository (see above).
+1. Change directory to the repository folder `cd qmul-group-18`.
+1. Run `git checkout master` to switch to the master branch.
+1. Run `git pull` to get latest master branch from remote.
+1. Build docker image with `docker build . -t thesispicker`.
+1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
+1. Navigate to localhost:5000/login and log in (e.g. username: 200123471, password: hello).
+1. Copy token and use curl or Postman to access routes. For example `curl -X GET -H "Authorization: Bearer <token>" http://localhost:5000/users`
+
+## Deploying to the Cloud
+
+### Deploy to AWS Lightsail
+
+#### Deploy to AWS Lightsail (First Time)
+
+1. Download and install AWS CLI v2.
+1. Login to your AWS account using AWS CLI v2.
+1. Build docker image with `docker build . -t thesispicker`.
+1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
+1. If previous step had no errors, create container service with `aws lightsail create-container-service --service-name thesispicker-service \ --power small --scale 1`.
+1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
+1. Amend the `container.js` file by replacing the image name with the new name from the previous command.
+1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
+
+#### Deploy to AWS Lightsail (Additional Times)
+
+1. Download and install AWS CLI v2.
+1. Login to your AWS account using AWS CLI v2.
+1. Build docker image with `docker build . -t thesispicker`.
+1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
+1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
+1. Amend the `container.js` file by replacing the image name with the new name from the previous command.
+1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
+
+## Internal Guidelines
+
+### Contributing
 
 All contributions by the team members should be done on a branch and only merged to the remote _master_ branch after a Pull Request Review of another team member. This ensures that we have a working version at all times.
 
@@ -34,35 +210,3 @@ Follow the following steps to contribute code via a new branch.
 11. Send the link of the next page to another team member and ask them to review your changes. They can then click `Merge pull request` to merge the changes into `master`. Should there be any conflicts during merge, please ask an experienced member of the team to help you as these require a bit more experience and are hard to explain in a simple instruction manual like this.
 
 Note: You do not have to merge your code to save it. You can follow steps 1-7 to save your code on github within your branch. This also enables other users to pull this branch and work on this. Merges should only be done when something is working and somewhat final. Please ask Martin, if you are unsure.
-
-## Run Locally
-
-1. Open a terminal and navigate to the parent directory where you want to have the repository.
-1. Clone repository (see above).
-1. Change directory to the repository folder `cd qmul-group-18`.
-1. Run `git checkout master` to switch to the master branch.
-1. Run `git pull` to get latest master branch from remote.
-1. Run `export FLASK_APP=app` to set the environment variable for flask. If using Windows, use `set FLASK_APP=app` in CMD or `$env:FLASK_APP = "app"` in Powershell
-1. Run `export FLASK_ENV=development` to enable debug mode (if you want it). If using Windows, use `set FLASK_ENV=development` in CMD or `$env:FLASK_ENV = "development"` in Powershell
-1. Run `pip install requirements.txt` to install all required packages.
-1. Run `flask run` to start the server and navigate to the url presented in terminal.
-
-## Get Token
-
-1. Log in at: http://127.0.0.1:5000/authentication (e.g. username: 200123471, password: hello).
-1. Use as follows in curl `curl -X GET -H "Authorization: Bearer <token>" http://localhost:5000/studentids`
-
-## Deploy to AWS Lightsail (First Time)
-
-1. Build docker image with `docker build . -t thesispicker`.
-1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
-1. If previous step had no errors, create container service with `aws lightsail create-container-service --service-name thesispicker-service \ --power small --scale 1`.
-1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
-1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
-
-## Deploy to AWS Lightsail (Additional Times)
-
-1. Build docker image with `docker build . -t thesispicker`.
-1. Run and test locally with `docker run -p 5000:5000 thesispicker`.
-1. Push image to service with `aws lightsail push-container-image --service-name thesispicker-service --label thesispicker-container --image thesispicker`
-1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
