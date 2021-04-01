@@ -2,6 +2,21 @@
 
 This repository contains the code for Group 18's Cloud Computing Project.
 
+## Table of contents
+
+1. [Usage](#Usage)
+   1. [Authorisation](#Authorisation)
+   1. [AuthorisAccessing the API](#Accessing-the-API)
+1. [Routes](#Routes)
+1. [Local Installation](#Local-Installation)
+   1. [Clone Repository](#Clone-Repository)
+   1. [Run Locally without Docker](#Run-Locally-without-Docker)
+   1. [Run Locally with Docker](#Run-Locally-with-Docker)
+1. [Deploying to the Cloud](#Deploying-to-the-Cloud)
+   1. [Deploy to AWS Lightsail](#Deploy-to-AWS-Lightsail)
+   1. [Deploy to AWS ECR](#Deploy-to-AWS-ECR)
+1. [Internal Developer Guidelines](#Internal-Developer-Guidelines)
+
 ## Usage
 
 ### Authorisation
@@ -11,25 +26,23 @@ This repository contains the code for Group 18's Cloud Computing Project.
 
 _Note: Some routes and actions will require staff access. The demo account above is a staff account._
 
-### Routes
+### Accessing the API
 
----
+The API can be accessed via CURL, Postman, simple HTTPs requests, etc. The token generated above is required for every opertation. It does expire after a few minutes of inactivity, but a new token can be generated at all times.
+A Postman collection with all routes can be found [here](QMUL_CC_G18.postman_collection.json).
 
-#### /users
+## Routes
 
----
+### /users
 
-**Allowed Methods:** ["GET", "POST"]
-
-**Access Roles:** Staff
-
-**Category:** User Management
-
+**Allowed Methods:** ["GET", "POST"]\
+**Access Roles:** Staff\
+**Category:** User Management\
 **Purpose**: Retrieve full list of users (GET). Create new user (POST).
 
-##### Examples for /users
+#### Examples for /users
 
-###### Get list of all Users
+##### Get list of all Users
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/users' \
@@ -53,21 +66,16 @@ curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-we
 
 ---
 
-#### /user/<qmul_id>
+### /user/<qmul_id>
 
----
-
-**Allowed Methods:** ["GET", "PUT", "DELETE"]
-
-**Access Roles:** Staff
-
-**Category:** User Management
-
+**Allowed Methods:** ["GET", "PUT", "DELETE"]\
+**Access Roles:** Staff\
+**Category:** User Management\
 **Purpose**: Retrieve single user (GET). Update existing user (PUT). Delete existing user (DELETE).
 
-##### Example for /user/<qmul_id>
+#### Example for /user/<qmul_id>
 
-###### Get single user
+##### Get single user
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/200123487' \
@@ -75,7 +83,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-###### Update existing user
+##### Update existing user
 
 ```bash
 curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/21234568' \
@@ -89,7 +97,7 @@ curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 }'
 ```
 
-###### Delete existing user
+##### Delete existing user
 
 ```bash
 curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/user/2001234871' \
@@ -99,21 +107,16 @@ curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-
 
 ---
 
-#### /topics
+### /topics
 
----
-
-**Allowed Methods:** ["GET", "POST"]
-
-**Access Roles:** Staff, Student
-
-**Category:** Topic Management
-
+**Allowed Methods:** ["GET", "POST"]\
+**Access Roles:** Staff, Student\
+**Category:** Topic Management\
 **Purpose**: Retrieve full list of topics (GET). Create new topic (POST).
 
-##### Examples for /topics
+#### Examples for /topics
 
-###### Get list of all Topics
+##### Get list of all Topics
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topics' \
@@ -121,7 +124,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-###### Create new Topic
+##### Create new Topic
 
 ```bash
 curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topics' \
@@ -136,21 +139,16 @@ curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-we
 
 ---
 
-#### /topic/\<id>
+### /topic/\<id>
 
----
-
-**Allowed Methods:** ["GET", "PUT", "DELETE"]
-
-**Access Roles:** Staff
-
-**Category:** Topic Management
-
+**Allowed Methods:** ["GET", "PUT", "DELETE"]\
+**Access Roles:** Staff\
+**Category:** Topic Management\
 **Purpose**: Retrieve topic (GET). Update existing topic (PUT). Delete existing topic (DELETE).
 
-##### Example for /topic/\<id>
+#### Example for /topic/\<id>
 
-###### Get single topic
+##### Get single topic
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
@@ -158,7 +156,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-###### Update existing topic
+##### Update existing topic
 
 ```bash
 curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
@@ -171,7 +169,7 @@ curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 }'
 ```
 
-###### Delete existing topic
+##### Delete existing topic
 
 ```bash
 curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/topic/7' \
@@ -181,21 +179,16 @@ curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-
 
 ---
 
-#### /choices
+### /choices
 
----
-
-**Allowed Methods:** ["GET", "POST"]
-
-**Access Roles:** Staff, Student (with restrictions to their own qmul id)
-
-**Category:** Choice Management
-
+**Allowed Methods:** ["GET", "POST"]\
+**Access Roles:** Staff, Student (with restrictions to their own qmul id)\
+**Category:** Choice Management\
 **Purpose**: Retrieve full list of choices (GET). Create new choice (POST).
 
-##### Examples for /choices
+#### Examples for /choices
 
-###### Get list of all Choices
+##### Get list of all Choices
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choices' \
@@ -203,7 +196,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-###### Create new Choice
+##### Create new Choice
 
 ```bash
 curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choices' \
@@ -217,21 +210,16 @@ curl --location --request POST 'https://thesispicker-service.rknvu7kenk4d0.eu-we
 
 ---
 
-#### /choice/<qmul_id>
+### /choice/<qmul_id>
 
----
-
-**Allowed Methods:** ["GET", "PUT", "DELETE"]
-
-**Access Roles:** Staff, Student (with restrictions to their own qmul id)
-
-**Category:** Choice Management
-
+**Allowed Methods:** ["GET", "PUT", "DELETE"]\
+**Access Roles:** Staff, Student (with restrictions to their own qmul id)\
+**Category:** Choice Management\
 **Purpose**: Retrieve choice (GET). Update existing choice (PUT). Delete existing choice (DELETE).
 
-##### Example for /choice/<qmul_id>
+#### Example for /choice/<qmul_id>
 
-###### Get single choice
+##### Get single choice
 
 ```bash
 curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
@@ -239,7 +227,7 @@ curl --location --request GET 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 --header 'Authorization: Bearer <INSERT TOKEN HERE>'
 ```
 
-###### Update existing choice
+##### Update existing choice
 
 ```bash
 curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
@@ -251,7 +239,7 @@ curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 }'
 ```
 
-###### Delete existing choice
+##### Delete existing choice
 
 ```bash
 curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/choice/200123489' \
@@ -260,21 +248,16 @@ curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-
 
 ---
 
-#### /approve/<qmul_id>
+### /approve/<qmul_id>
 
----
-
-**Allowed Methods:** ["PUT"]
-
-**Access Roles:** Staff
-
-**Category:** Choice Management
-
+**Allowed Methods:** ["PUT"]\
+**Access Roles:** Staff\
+**Category:** Choice Management\
 **Purpose**: Approve existing choice (PUT).
 
-##### Examples for /approve/<qmul_id>
+#### Examples for /approve/<qmul_id>
 
-###### Approve existing choice
+##### Approve existing choice
 
 ```bash
 curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/approve/200123465' \
@@ -287,7 +270,7 @@ curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-wes
 
 ---
 
-## Installation
+## Local Installation
 
 This Guide is for absolute beginners. If you are more experienced, you might want to skip some of the steps.
 
@@ -298,7 +281,7 @@ This Guide is for absolute beginners. If you are more experienced, you might wan
 3. Clone repository using `git clone git@github.com:martin-aussenhof/qmul-group-18.git` in your local console or preferred development environment. It will create a new sub directory in your current sub directory, so be aware of your current path.
 4. Open the directory `qmul-group-18` in your favourite editor to view the code.
 
-## Run Locally without Docker
+### Run Locally without Docker
 
 1. Open a terminal and navigate to the parent directory where you want to have the repository.
 1. Clone repository (see above).
@@ -310,7 +293,7 @@ This Guide is for absolute beginners. If you are more experienced, you might wan
 1. Run `pip install requirements.txt` to install all required packages.
 1. Run `flask run` to start the server and navigate to the url presented in terminal.
 
-## Run Locally with Docker
+### Run Locally with Docker
 
 1. Open a terminal and navigate to the parent directory where you want to have the repository.
 1. Clone repository (see above).
@@ -347,7 +330,11 @@ This Guide is for absolute beginners. If you are more experienced, you might wan
 1. Amend the `container.js` file by replacing the image name with the new name from the previous command.
 1. Deploy with `aws lightsail create-container-service-deployment --service-name thesispicker-service --containers file://containers.json --public-endpoint file://public-endpoint.json`
 
-## Internal Guidelines
+### Deploy to AWS ECR
+
+A github workflow has been added to the repository with an action that automatically deploys a new image to ECR. Fargate is being used for hosting.
+
+## Internal Developer Guidelines
 
 ### Contributing
 
