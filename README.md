@@ -1,4 +1,4 @@
-# Cloud Computing Project - Group 18
+# Cloud Computing Project - Group 18 - Thesis Picker
 
 This repository contains the code for Group 18's Cloud Computing Project.
 
@@ -260,11 +260,11 @@ curl --location --request DELETE 'https://thesispicker-service.rknvu7kenk4d0.eu-
 ##### Approve existing choice
 
 ```bash
-curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/approve/200123465' \
+curl --location --request PUT 'https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/approve/200123489' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <INSERT TOKEN HERE>' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYxNzM2NzAyOSwianRpIjoiMTk2OGYyMjktNTFhOC00ZGM4LWJkZjItNzk1ZTFkYWVhYWQxIiwibmJmIjoxNjE3MzY3MDI5LCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiMjAwMTIzNDcxIiwiZXhwIjoxNjE3MzY3OTI5LCJyb2xlIjoic3RhZmYifQ.5ww9aW9xXWw7VlXTajQS_DR4SpCpUqg_JaRvZcE9VRc' \
 --data-raw '{
-    "approvedid": 0
+    "approved": true
 }'
 ```
 
