@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d37c7654-92b3-4da3-b2f6-a24a15979b98",
+		"_postman_id": "971279a0-6d52-4d78-9268-b0ea49a3d00d",
 		"name": "QMUL_CC_G18",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -100,13 +100,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/200123487",
+							"raw": "{{url}}/user/212345681",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
-								"200123487"
+								"212345681"
 							]
 						}
 					},
@@ -172,13 +172,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/2001234871",
+							"raw": "{{url}}/user/212345681",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
-								"2001234871"
+								"212345681"
 							]
 						}
 					},
@@ -266,13 +266,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/topic/7",
+							"raw": "{{url}}/topic/10",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"topic",
-								"7"
+								"10"
 							]
 						}
 					},
@@ -328,13 +328,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/topic/7",
+							"raw": "{{url}}/topic/10",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"topic",
-								"7"
+								"10"
 							]
 						}
 					},
@@ -434,24 +434,6 @@
 					"response": []
 				},
 				{
-					"name": "choice",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/choice/200123489",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"choice",
-								"200123489"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "approve",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -469,16 +451,34 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"approvedid\": 0\r\n}"
+							"raw": "{\r\n    \"approved\": true\r\n}"
 						},
 						"url": {
-							"raw": "{{url}}/approve/200123465",
+							"raw": "{{url}}/approve/200123489",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"approve",
-								"200123465"
+								"200123489"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "choice",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/choice/200123489",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"choice",
+								"200123489"
 							]
 						}
 					},
@@ -492,7 +492,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYxNzIyMjcwMSwianRpIjoiMDJkMDI4NDYtMTE4Zi00NzU5LWE1ZjAtMDkwMjk1ZTMxMzk2IiwibmJmIjoxNjE3MjIyNzAxLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiMjAwMTIzNDcxIiwiZXhwIjoxNjE3MjIzNjAxLCJyb2xlIjoic3RhZmYifQ.TaysbuagFus6IjH0-E-35RxRUY6VqdGl_b7tCLV4fek",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYxNzM2ODIzMSwianRpIjoiMjhjMzhmN2ItYzJmMC00NzllLTkzYjgtYTlhNjE0OTE2YTk2IiwibmJmIjoxNjE3MzY4MjMxLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiMjAwMTIzNDcxIiwiZXhwIjoxNjE3MzY5MTMxLCJyb2xlIjoic3RhZmYifQ.ebkqVGSYoQraO1ou54NmD_ds0cOV4HIid8UtHojCGvI",
 				"type": "string"
 			}
 		]
@@ -520,7 +520,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com/"
+			"value": "https://thesispicker-service.rknvu7kenk4d0.eu-west-2.cs.amazonlightsail.com"
 		}
 	]
 }
